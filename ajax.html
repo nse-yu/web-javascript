@@ -7,20 +7,65 @@
     <link rel="stylesheet" href="scss/style.css">
 </head>
 <body>
-    <h1>ajax練習</h1>
-    <form method="get">
-        <table>
-            <tr>
-                <th>text</th>
-                <td><input type="text"></td>
-                <td><input type="submit" value="送信"></td>
-            </tr>
-        </table>
-    </form>
+    <h1 class="title">ajax練習</h1>
 
-    <section class="canvas">
-        <p class="canvas__title">サンプルデータ</p>
-    </section>
-    <span id="status"></span>
+    <main>
+        <section class="main__block">
+            <form method="get">
+                <table>
+                    <tr>
+                        <th>text</th>
+                        <td><input type="text"></td>
+                        <td><input type="submit" value="送信"></td>
+                    </tr>
+                </table>
+            </form>
+            <span id="status"></span>
+            <section class="canvas msg-canvas">
+                <p class="canvas__title">サンプルデータ</p>
+            </section>
+        </section>
+        <section class="main__block">
+            <section class="incremental-search">
+                <form method="get">
+                    <table>
+                        <tr>
+                            <th>Account</th>
+                            <td><input type="text" name="search-bar"></td>
+                        </tr>
+                    </table>
+                </form>
+                <div class="canvas">
+                    <p class="canvas__title">Account一覧</p>
+                    <div class="incremental-canvas">
+                    </div>
+                </div>
+            </section>
+            <section class="canvas slide-canvas z-hidden">
+                <table>
+                    <tr>
+                        <th>USER_ID</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>PASSWORD</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>MAIL</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>NAME</th>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>AGE</th>
+                        <td></td>
+                    </tr>
+                </table>
+            </section>
+        </section>
+    </main>
 </body>
 </html>
