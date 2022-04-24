@@ -64,4 +64,16 @@ body {
   transition: 0.8s;
   transform: translateX(0);
 }
+
+header {
+  display: flex;
+  align-items: center;
+}
+header .header__previous {
+  width: 30px;
+  height: 30px;
+}
+header .header__previous:hover {
+  opacity: 0.6;
+}
 /*# sourceMappingURL=style.css.map */

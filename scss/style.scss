@@ -60,3 +60,15 @@ body{
     transition: 0.8s;
     transform: translateX(0);
 }
+
+header{
+    display: flex;
+    align-items: center;
+    .header__previous{
+        width: 30px;
+        height: 30px;
+        &:hover{
+            opacity: 0.6;
+        }
+    }
+}

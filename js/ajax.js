@@ -4,6 +4,7 @@ window.onload = () => {
     document.querySelector("input[type='submit']").classList.toggle("form-btn");
     document.querySelectorAll("input[type='text']").forEach((node) => {node.classList.toggle("form-text");});
     document.getElementsByTagName("form")[0].addEventListener("submit",evt => evt.preventDefault());
+    document.querySelector(".header__previous").addEventListener("click",() => {location = "index.html";});
 
     //TODO:[付箋]マップ
     const map = new Map();

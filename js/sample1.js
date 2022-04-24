@@ -840,6 +840,13 @@ window.onload = () => {
     * 
     * <ディープコピー方法>
     * 新obj = JSON.parse(JSON.stringify(旧obj))
+    * 
+    * <AjaxにおけるJSON展開方法>
+    * var req = new XMLHttpRequest()
+    * req.open(hogehoge)
+    * req.send(hoge)
+    * var json = req.responseText
+    * var data = eval("(" + json + ")") //json to object
    */
 
 
