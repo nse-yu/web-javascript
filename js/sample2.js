@@ -201,7 +201,8 @@
  * 
  * /====================イベント=======================/
  * <基本形>
- * $(セレクター).イベント名(function(){ 処理 });
+ * $(セレクター).イベント名(obj,function(e){ 処理 });
+ * obj：{param: value}で指定し、処理部にて「e.data.param」で参照（objは省略可）
  * 
  * ４９．ready()
  * callback：ある要素のページ表示の準備が完了したとき
@@ -211,7 +212,10 @@
  * ★イベント発生元の要素の取得には、$(this)を使用する。
  *   この「this」はあくまでjsのオブジェクトであり、それを$()でjQuery用に変換しているだけである。
  * 
- * ========<使用可能なイベント名>=========
+ * ★functionの仮引数eは「イベントオブジェクト」と呼ばれ、イベント発生時のステータス情報を含んでいる。
+ * 　例：マウスイベント時の「マウス位置」や「発生源」、「マウスがどうしたのか」など
+ * 
+ * =========<使用可能なイベント名>=========
  * 　１．click      　　クリック
  * 　２．dblclick   　　ダブルクリック
  * 　３．mousedown  　　ボタン押下時
@@ -232,10 +236,38 @@
  * １８．resize     　　ウインドウのサイズを変更した
  * １９．scroll     　　スクロールした
  * ２０．contextmenu    コンテキストメニューを表示する前
+ * 
+ * 
+ * /================エラー処理===================/
+ * <基本形>
+ * $(セレクター).on(イベント名,function(){ 処理 })
+ * 
+ * ５０．on()
+ * event,callback：イベント基本形の書き換え
+ * event,child-selector,callback：ある要素のchild-selectorに一致する要素が、指定eventに該当したときにcallbackを呼び出す
+ *                                子要素のイベントを親要素で管理できるというのがメリット。
+ * 
+ * ★１つ目と２つ目の違いは、１つ目が「一致する子要素すべてにイベントを登録」するのに対し、
+ * 　２つ目が「親要素に対してイベントを登録」することにある。
+ * 　これにより、イベント登録の負荷を軽減できる。
+ * 
+ * ５１．off()
+ * event：ある要素に関する、あるeventを無効にする
+ * none：ある要素に関するすべてのイベントを無効にする
+ * 
+ * ５２．hover()
+ * mouseenter,mouseleave：ある要素に対して、mouseenterとmouseleaveのイベントコールバックを設定する
+ * 
+ * ５３．one()
+ * event,callback：ある要素のeventに対して、一度だけcallbackを呼び出す
+ * 
+ * 
+ * ★特定の要素に依存しないメソッド呼び出しの際には、セレクターを与えず、
+ * 　「$.メソッド()」の形式で呼び出すことができる。
  */
 
 $(function() {
-    //===============addBack説明===============//
+    //TODO:===============addBack説明===============//
 
     /**流れ１：#list取得 -> 子要素取得 -> 子要素すべて背景変更
     *         -> #listに戻る(#list取得) -> #list全体に枠線  
@@ -259,4 +291,118 @@ $(function() {
      * 流れ２では、子要素と#list2キーの同時選択(ctrl+)が起こっている。
      * 
      */
+
+
+
+    //TODO:===============コンテキストメニュ================//
+    $(document)
+    .mousedown(function(e) {
+        if(e.which === 3){
+            $('.context-menu').css({display: "block",top:e.pageY,left:e.pageX});
+        }
+    })
+    .click(function(e) {
+        if(e.which === 1){
+            $('.context-menu').css('display','none');
+            $('.context-menu2').css('display','none');
+        }
+    })
+    .contextmenu(function(e) {
+        e.preventDefault();
+    });
+    /**whichプロパティ
+     * １．左ボタン
+     * ２．ホイールボタン(中央)
+     * ３．右ボタン
+     */
+
+
+    //TODO:====================preventDefault=================//
+    $('.validate-form')
+    .keypress(function(e) { //入力を数値かハイフンのみとする
+        let k = e.which;
+
+        if(!((k >= 48 && k <= 57) || k === 45 || k === 8 || k === 0)){
+            e.preventDefault();
+        }
+    })
+    .submit(function(e) { //送信前の最終確認
+        if(!confirm("送信してもよろしいですか？")) e.preventDefault();
+    });
+
+
+
+    //TODO:==================stopPropagation==================//
+    $('.tb').mousedown(function(e) { //テーブル上でのクリックでは、別のコンテキストメニューを表示
+        if(e.which === 3){
+            $('.context-menu2').css({display:"block",top:e.pageY,left:e.pageX});
+            e.stopPropagation();
+        }
+    });
+    //table上でのイベントが、上層のdocumentイベントまで伝播（反応）してしまうのを防ぐ。
+
+
+
+
+    //TODO:====================入力チェックフォーム====================//
+    let msgs = [];
+    let setErr = function(el,msg){
+        msgs.push(`<li>${msg}</li>`); //エラーメッセージを表すli要素を挿入
+        $(el)
+            .addClass('err-list__field')
+            .after('<span class="err-list__mark">*</span>')
+    };
+
+    $('.myform').submit(function(e) { //送信時
+        //とりあえず、エラー表示系を初期化
+        $('.err-list__mark').remove();
+        msgs = [];
+
+        $('.validate',this) //取得したinputたち, valid対象のinput
+            .removeClass('err-list__field')
+            .filter('.required') //必須入力項目
+            .each(function() { 
+                if($(this).val() === '')
+                {
+                    setErr(this,$(this).prev('label').text() + 'は必須入力です。');
+                }
+            })
+            .end()
+            .filter('.length') //入力項目長
+            .each(function() {
+                if($(this).val().length > $(this).data('length'))
+                {
+                    setErr(this,$(this).prev('label').text()+'は'+$(this).data('length')+'文字以内！！');
+                }
+            })
+            .end()
+            .filter('.range') //入力項目範囲
+            .each(function() {
+                let v = parseFloat($(this).val());
+                if(v < $(this).data('min') || v > $(this).data('max'))
+                {
+                    let msg = `${$(this).prev('label').text()}は${$(this).data('min')}~${$(this).data('max')}までの範囲で入力してください。`;
+                    setErr(this,msg);
+                }
+            })
+            .end()
+            .filter('.inarray') //候補値検証
+            .each(function() {
+                let opts = $(this).data('option').split(' '); //空白区切り文字列を配列へ
+                if($.inArray($(this).val(),opts) === -1) //ある値が配列に含まれているか
+                {
+                    setErr(this,
+                        `${$(this).prev('label').text()}は${opts.toString()}のいずれかで入力してください。`);
+                }
+            });
+
+        if(msgs.length === 0){
+            $('.err-list').css('display','none');
+        }else{
+            $('.err-list')
+                .css('display','block')
+                .html(msgs.join(''));
+            e.preventDefault();
+        }
+    })
 })

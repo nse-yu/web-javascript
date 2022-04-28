@@ -1,0 +1,35 @@
+.context-menu,.context-menu2{
+    position: absolute;
+    display: none;
+    padding: 0;
+    border-width: 1px;
+    border-style: solid;
+    background-color: white;
+}
+
+.context-menu li,.context-menu2 li{
+    padding: 10px 5px 10px 10px;
+    list-style: none;
+    border-bottom-color: #ccc;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    font-size: small;
+}
+
+.context-menu li a,.context-menu2 li a{
+    text-decoration: none;
+    color: black;
+}
+
+
+/*エラーメッセージ系*/
+.err-list{
+    color: red;
+    display: none;
+}
+.err-list__field{
+    background-color: #f9c;
+}
+.err-list__mark{
+    color: red;
+}
