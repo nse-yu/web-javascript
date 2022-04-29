@@ -1,0 +1,30 @@
+.container{
+    width: 700px;
+}
+.container > ul{
+    display: flex;
+    border-radius: 5px;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    list-style: none;
+}
+.container > ul li{
+    width: 100%;
+    border: 1px solid black;
+}
+.container > ul li a{
+    display: block;
+    background-color: greenyellow;
+    text-decoration: none;
+    color: black;
+}
+.tab--selected{
+    background-color: black!important;
+    color: white!important;
+}
+.textbox{
+    border: 1px solid rgba(0, 0, 0, 0.207);
+    border-top: none;
+    padding: 15px;
+}
